@@ -1,0 +1,276 @@
+.footer {
+  background: #FFFFFF;
+  flex-shrink: 0;
+}
+
+.footer__content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px 0 0 0;
+  gap: 30px;
+}
+
+.footer__track-card {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 8px;
+  max-width: 434px;
+}
+
+.footer__track-poster {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+}
+
+.footer__track-info {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.footer__title-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.footer__track-title {
+  font-family: 'Actor', sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 12px;
+  letter-spacing: 0.01em;
+  color: #171717;
+  white-space: nowrap;
+}
+
+.footer__track-artist {
+  font-family: 'Actor', sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 12px;
+  letter-spacing: 0.01em;
+  color: #AAAAAA;
+  white-space: nowrap;
+}
+
+.player {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  max-width: 681px;
+  width: 100%;
+}
+
+.player__buttons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+}
+
+.player__buttons img,
+.player__play-mobile img,
+.footer__title-row img,
+.player__volume-thumb {
+  cursor: pointer;
+  transition: transform 0.15s ease, opacity 0.15s ease, filter 0.15s ease;
+}
+
+.player__buttons img:hover,
+.player__play-mobile img:hover,
+.footer__title-row img:hover,
+.player__volume-thumb:hover {
+  opacity: 0.9;
+  width: 15px;
+  height: 15px;
+}
+
+.player__buttons img:active,
+.player__play-mobile img:active,
+.footer__title-row img:active,
+.player__volume-thumb:active {
+  opacity: 0.8;
+  width: 15px;
+  height: 15px;
+}
+
+.player__progress-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  max-width: 681px;
+  min-width: 300px;
+  height: 14px;
+}
+
+.player__time-current,
+.player__time-total {
+  font-family: 'Actor', sans-serif;
+  font-weight: 400;
+  font-size: 11px;
+  line-height: 100%;
+  letter-spacing: 0.015em;
+  color: #AAAAAA;
+}
+
+.player__progress-track {
+  flex: 1;
+  padding: 5px 0;
+  height: 4px;
+  background: #E8E8E8;
+  border-radius: 75px;
+  position: relative;
+  cursor: pointer;
+}
+
+.player__progress-fill {
+  width: 0%;
+  height: 4px;
+  background: #FC6D3E;
+  border-radius: 75px;
+  transition: width 0.08s linear;
+}
+
+.player__volume {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  width: auto;
+  padding-top: 35px;
+}
+
+.player__volume-bar {
+  position: relative;
+  width: 72px;
+  height: 4px;
+  background: #E8E8E8;
+  border-radius: 39px;
+  cursor: pointer;
+}
+
+.player__volume-fill {
+  width: 100%;
+  height: 4px;
+  background: #FC6D3E;
+  border-radius: 39px;
+  transition: width 0.08s linear;
+}
+
+.player__volume-thumb {
+  position: absolute;
+  top: 50%;
+  left: calc(100% - 6px);
+  transform: translateY(-50%);
+  width: 12px;
+  height: 12px;
+  background: #FC6D3E;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.player__play-mobile {
+  display: none;
+}
+
+@media (max-width: 1024px) {
+  .footer__track-title {
+    overflow: hidden;
+    text-overflow: clip;
+    max-width: 150px;
+  }
+
+  .footer__track-artist {
+    overflow: hidden;
+    text-overflow: clip;
+    max-width: 150px;
+  }
+}
+
+@media (max-width: 768px) {
+  .footer__content {
+    padding: 16px 0 14px 0;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 2px;
+    flex-wrap: wrap;
+  }
+
+  .footer__track-card {
+    max-width: 286px;
+    padding: 0;
+    gap: 10px;
+    align-items: flex-start;
+  }
+
+  .footer__track-poster {
+    width: 60px;
+    height: 60px;
+  }
+
+  .footer__track-info {
+    gap: 10px;
+  }
+
+  .footer__track-title {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: clip;
+    max-width: 180px;
+  }
+
+  .footer__track-artist {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: clip;
+    max-width: 216px;
+  }
+
+  .player__play-mobile {
+    display: block;
+  }
+
+  .player__play-mobile img {
+    width: 40px;
+    height: 40px;
+    display: block;
+  }
+
+  .player {
+    width: auto;
+    flex: 1;
+    align-items: flex-start;
+    gap: 0;
+  }
+
+  .player__buttons,
+  .player__volume {
+    display: none;
+  }
+
+  .player__progress-bar {
+    padding: 6px 0 0 0;
+    gap: 12px;
+    min-width: auto;
+    max-width: none;
+    width: 100%;
+  }
+
+  .player__time-current,
+  .player__time-total {
+    font-size: 11px;
+    line-height: 100%;
+    letter-spacing: 0.015em;
+    color: #AAAAAA;
+  }
+
+  .player__progress-track {
+    flex: 1;
+  }
+}

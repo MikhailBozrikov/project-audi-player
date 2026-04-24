@@ -1,0 +1,156 @@
+.tracks-table__wrapper {
+  flex: 1;
+  overflow-y: auto;
+  margin-top: 22px;
+  min-height: 0;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.tracks-table__wrapper::-webkit-scrollbar {
+  display: none;
+}
+
+.tracks-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #FFFFFF;
+}
+
+.tracks-table__col {
+  text-align: left;
+  vertical-align: middle;
+  padding: 0;
+  background: #FFFFFF;
+}
+
+.tracks-table tr {
+  border-bottom: 1px solid #E8E8E8;
+}
+
+.tracks-table thead tr {
+  height: 32px;
+}
+
+.tracks-table__col {
+  font-family: 'Actor', sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 12px;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: #A4A4A4;
+}
+
+.tracks-table__col--number {
+  padding-left: 10px;
+}
+
+.tracks-table__col--title {
+  padding: 10px 8px;
+}
+
+.tracks-table tbody tr {
+  height: 88px;
+}
+
+.tracks-table tbody tr:hover {
+  border-color: #B4A9FF;
+}
+
+.tracks-table tbody tr:focus-visible {
+  outline: none;
+  border-color: #B4A9FF;
+}
+
+.tracks-table__col {
+  font-family: 'Actor', sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 12px;
+  letter-spacing: 0.01em;
+  color: #171717;
+}
+
+.tracks-table__col--number {
+  font-size: 20px;
+  line-height: 100%;
+  letter-spacing: 0.01em;
+  padding-left: 10px;
+}
+
+.tracks-table__col--title {
+  padding: 14px 8px;
+}
+
+.track-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.track-info__poster {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+}
+
+.track-info__text {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.track-info__name {
+  font-family: 'Actor', sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 12px;
+  letter-spacing: 0.01em;
+  color: #171717;
+}
+
+.track-info__artist {
+  font-family: 'Actor', sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 12px;
+  letter-spacing: 0.01em;
+  color: #AAAAAA;
+}
+
+.tracks-table__col--album {
+  font-size: 14px;
+  line-height: 12px;
+  color: #171717;
+}
+
+.tracks-table__col--date {
+  font-size: 14px;
+  line-height: 12px;
+  color: #AAAAAA;
+}
+
+.tracks-table__col--favorite {
+  text-align: center;
+}
+
+.tracks-table__col--favorite img {
+  display: block;
+  margin: 0 auto;
+}
+
+.tracks-table__col--duration {
+  font-size: 14px;
+  line-height: 12px;
+  color: #171717;
+}
+
+.tracks-table__col--more {
+  text-align: center;
+}
+
+.tracks-table__col--more img {
+  display: block;
+  margin: 0 auto;
+}

@@ -1,0 +1,14 @@
+/* Глобальные стили */
+@import "global/reboot.css";
+@import "global/fonts.css";
+@import "global/container.css";
+@import "global/app-root.css";   
+@import "global/mobile-cards-fix.css";
+
+/* Блоки */
+@import "blocks/header.css";
+@import "blocks/main-section.css";
+@import "blocks/cards-table.css";
+@import "blocks/footer.css";
+@import "blocks/sidebar.css";
+@import "blocks/modal.css";

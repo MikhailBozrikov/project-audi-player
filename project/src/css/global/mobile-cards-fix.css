@@ -1,0 +1,41 @@
+@media (max-width: 768px) {
+  .main-section__mobile-cards {
+    display: flex !important;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .main-section__mobile-cards::-webkit-scrollbar {
+    display: none;
+  }
+
+  .track-card {
+    display: flex !important;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    background: #FFFFFF;
+    border: 1px solid transparent;
+    padding: 10px;
+  }
+
+  .track-card__info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: 1;
+  }
+
+  .track-card__actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+  }
+}

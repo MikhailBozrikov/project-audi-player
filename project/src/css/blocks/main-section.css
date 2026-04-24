@@ -1,0 +1,221 @@
+main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.page-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.main-section {
+  background: #FFFFFF;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 0;
+  min-height: 0;
+}
+
+.main-section__content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding-top: 35px;
+  min-height: 0;
+}
+
+.main-section__title {
+  font-family: 'Actor', sans-serif;
+  font-weight: 400;
+  font-size: 30px;
+  color: #11253D;
+  flex-shrink: 0;
+  margin-bottom: 10px;
+}
+
+@media (max-width: 768px) {
+  .main-section__title,
+  .tracks-table__wrapper {
+    display: none;
+  }
+
+  .main-section__mobile-nav {
+    display: flex;
+  }
+
+  .main-section__mobile-cards {
+    display: flex;
+  }
+
+  .main-section {
+    background: #F5F5F5;
+    margin-bottom: 30px;
+  }
+
+  .main-section__content {
+    padding-top: 20px;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+  }
+
+  .main-section__mobile-nav {
+    justify-content: space-between;
+    gap: 19px;
+    margin-bottom: 20px;
+  }
+
+  .main-section__mobile-nav-btn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 16px;
+    border-radius: 30px;
+    font-family: 'Actor', sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 12px;
+    letter-spacing: 0.01em;
+    background: #FFFFFF;
+    border: none;
+    cursor: pointer;
+  }
+
+  .main-section__mobile-nav-btn--audio {
+    background-color: #FC6D3E;
+    color: #FFFFFF;
+    transition: background-color 0.2s;
+  }
+
+  .main-section__mobile-nav-btn--audio:hover {
+    background-color: #925c4a;
+  }
+
+  .main-section__mobile-nav-btn--audio:focus-visible {
+    outline: none;
+    background-color: #925c4a;
+  }
+
+  .main-section__mobile-nav-btn--favorite {
+    background-color: #FFFFFF;
+    color: #11253D;
+    transition: background-color 0.2s;
+  }
+
+  .main-section__mobile-nav-btn--favorite:hover {
+    background-color: #f7dddd;
+  }
+
+  .main-section__mobile-nav-btn--favorite:focus-visible {
+    outline: none;
+    background-color: #f7dddd;
+  }
+
+  .main-section__mobile-cards {
+    flex: 1;
+    overflow-y: auto;
+    flex-direction: column;
+    gap: 10px;
+    min-height: 0;
+    width: 100%;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .main-section__mobile-cards::-webkit-scrollbar {
+    display: none;
+  }
+
+  .track-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-right: 10px;
+    gap: 10px;
+    background: #FFFFFF;
+    border: 1px solid transparent;
+    transition: border-color 0.2s;
+    outline: none;
+  }
+
+  .track-card:hover {
+    border-color: #B4A9FF;
+  }
+
+  .track-card:focus-visible {
+    outline: none;
+    border-color: #B4A9FF;
+  }
+
+  .track-card__info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: 1;
+  }
+
+  .track-card__info .track-info__poster {
+    width: 70px;
+    height: 70px;
+    object-fit: cover;
+  }
+
+  .track-card__info .track-info__text {
+    width: 130px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .track-card__info .track-info__name {
+    font-size: 18px;
+    line-height: 100%;
+    color: #11253D;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: clip;
+  }
+
+  .track-card__info .track-info__artist {
+    font-size: 12px;
+    line-height: 12px;
+    letter-spacing: 0.01em;
+    color: #AAAAAA;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: clip;
+  }
+
+  .track-card__actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+  }
+
+  .track-card__dots {
+    width: 17px;
+    display: flex;
+    align-items: center;
+    gap: 2.5px;
+  }
+
+  .track-card__dots span {
+    width: 4px;
+    height: 4px;
+    background: #C4C4C4;
+    border-radius: 50%;
+  }
+}
+
+@media (min-width: 769px) {
+  .main-section__mobile-nav,
+  .main-section__mobile-cards {
+    display: none;
+  }
+}
