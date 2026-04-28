@@ -1,7 +1,7 @@
 import { Store } from './store';
 import type { Track } from '../types/app.types';
 
-export class AudioPlayer {
+export class AudioPlayer extends EventTarget {
   private static instance: AudioPlayer;
 
   private audio = new Audio();
@@ -10,63 +10,38 @@ export class AudioPlayer {
   private currentTrackId: number | null = null;
   private hasPlayableSource = false;
 
-  private progressFillEl: HTMLElement | null = null;
-  private volumeFillEl: HTMLElement | null = null;
-  private volumeThumbEl: HTMLElement | null = null;
-
   private currentSourceDuration = 0;
 
   private demoSourceUrl: string | null = null;
   private demoSourcePromise: Promise<string> | null = null;
 
   private readonly demoDurationSeconds = 24;
-  private controlsAttached = false;
-  private repeatEnabled = false;
+  private _repeatEnabled = false;
+
+  private lastTrackBlobUrl: string | null = null;
 
   private constructor() {
+    super();
     this.audio.preload = 'metadata';
     this.audio.volume = 1;
 
-    this.audio.addEventListener('loadedmetadata', () => {
-      const duration = this.getDisplayedDuration();
-      this.currentSourceDuration = duration;
-      this.store.updatePlayback(!this.audio.paused, this.audio.currentTime, duration);
-      this.syncProgressUI();
-    });
-
-    this.audio.addEventListener('durationchange', () => {
-      const duration = this.getDisplayedDuration();
-      this.currentSourceDuration = duration;
-      this.store.updatePlayback(!this.audio.paused, this.audio.currentTime, duration);
-      this.syncProgressUI();
-    });
-
-    this.audio.addEventListener('timeupdate', () => {
-      const duration = this.getDisplayedDuration();
-      this.store.updatePlayback(!this.audio.paused, this.audio.currentTime, duration);
-      this.syncProgressUI();
-    });
-
+    this.audio.addEventListener('loadedmetadata', () => this.handleDurationChange());
+    this.audio.addEventListener('durationchange', () => this.handleDurationChange());
+    this.audio.addEventListener('timeupdate', () => this.handleTimeUpdate());
     this.audio.addEventListener('ended', () => this.handleEnded());
-
-    this.audio.addEventListener('play', () => {
-      this.store.updatePlayback(true, this.audio.currentTime, this.getDisplayedDuration());
-      this.syncProgressUI();
-    });
-
-    this.audio.addEventListener('pause', () => {
-      this.store.updatePlayback(false, this.audio.currentTime, this.getDisplayedDuration());
-      this.syncProgressUI();
-    });
+    this.audio.addEventListener('play', () => this.dispatchPlaybackChange(true));
+    this.audio.addEventListener('pause', () => this.dispatchPlaybackChange(false));
 
     window.addEventListener('beforeunload', () => {
       if (this.demoSourceUrl) {
         URL.revokeObjectURL(this.demoSourceUrl);
       }
+      if (this.lastTrackBlobUrl) {
+        URL.revokeObjectURL(this.lastTrackBlobUrl);
+      }
     });
 
     void this.ensureDemoSource();
-    setTimeout(() => this.attachControls(), 0);
   }
 
   static getInstance() {
@@ -78,11 +53,9 @@ export class AudioPlayer {
     if (Number.isFinite(this.audio.duration) && this.audio.duration > 0) {
       return Math.round(this.audio.duration);
     }
-
     if (this.currentSourceDuration > 0) {
       return this.currentSourceDuration;
     }
-
     const track = this.store.currentTrack;
     return track ? Math.round(track.duration * 60) : 0;
   }
@@ -167,7 +140,6 @@ export class AudioPlayer {
     const envelope = (pos: number, length: number, attack = 0.08, release = 0.12) => {
       const a = Math.max(1 / sampleRate, length * attack);
       const r = Math.max(1 / sampleRate, length * release);
-
       if (pos < a) return pos / a;
       if (pos > length - r) return Math.max(0, (length - pos) / r);
       return 1;
@@ -239,11 +211,7 @@ export class AudioPlayer {
   private getRandomTrack(): Track | null {
     const tracks = this.store.allTracks;
     if (!tracks.length) return null;
-
-    if (tracks.length === 1) {
-      return tracks[0];
-    }
-
+    if (tracks.length === 1) return tracks[0];
     const candidates = tracks.filter(t => this.isRandomCandidate(t));
     const pool = candidates.length ? candidates : tracks;
     const index = Math.floor(Math.random() * pool.length);
@@ -267,41 +235,25 @@ export class AudioPlayer {
     return await this.ensureDemoSource();
   }
 
-  private syncProgressUI(currentTime = this.audio.currentTime, duration = this.getDisplayedDuration()) {
-    const percent = duration > 0 ? Math.min(1, Math.max(0, currentTime / duration)) : 0;
-
-    if (this.progressFillEl) {
-      this.progressFillEl.style.width = `${percent * 100}%`;
-    }
+  private dispatchPlaybackChange(playing: boolean) {
+    this.dispatchEvent(new CustomEvent('playbackchange', { detail: { playing } }));
   }
 
-  private syncVolumeUI(volume = this.audio.volume) {
-    const percent = Math.min(1, Math.max(0, volume));
-
-    if (this.volumeFillEl) {
-      this.volumeFillEl.style.width = `${percent * 100}%`;
-    }
-
-    if (this.volumeThumbEl) {
-      this.volumeThumbEl.style.left = `calc(${percent * 100}% - 6px)`;
-    }
+  private handleDurationChange() {
+    const duration = this.getDisplayedDuration();
+    this.currentSourceDuration = duration;
+    this.store.updatePlayback(!this.audio.paused, this.audio.currentTime, duration);
+    this.dispatchEvent(new CustomEvent('timeupdate', { detail: { currentTime: this.audio.currentTime, duration } }));
   }
 
-  private setButtonActiveState(button: HTMLElement | null, enabled: boolean) {
-    if (!button) return;
-    button.style.filter = enabled ? 'none' : 'grayscale(1) brightness(0.55)';
-    button.style.opacity = enabled ? '1' : '0.7';
-  }
-
-  private updateRepeatButtonUI() {
-    const repeatBtn = document.querySelector('.player__buttons img[src*="fixate.svg"]') as HTMLElement | null
-      || document.querySelector('.player__buttons img[alt="зациклить"]') as HTMLElement | null;
-
-    this.setButtonActiveState(repeatBtn, this.repeatEnabled);
+  private handleTimeUpdate() {
+    const duration = this.getDisplayedDuration();
+    this.store.updatePlayback(!this.audio.paused, this.audio.currentTime, duration);
+    this.dispatchEvent(new CustomEvent('timeupdate', { detail: { currentTime: this.audio.currentTime, duration } }));
   }
 
   private handleEnded() {
-    if (this.repeatEnabled) {
+    if (this._repeatEnabled) {
       this.audio.currentTime = 0;
       void this.audio.play().catch(() => {});
       return;
@@ -312,123 +264,16 @@ export class AudioPlayer {
 
     const duration = this.getDisplayedDuration();
     this.store.updatePlayback(false, 0, duration);
-    this.syncProgressUI(0, duration);
-  }
-
-  private handleControlClick = (e: MouseEvent) => {
-    const target = e.target as HTMLElement;
-    const img = target.closest('img') as HTMLImageElement | null;
-    if (!img) return;
-
-    const src = img.getAttribute('src') || '';
-    const alt = (img.getAttribute('alt') || '').trim();
-
-    if (src.includes('together.svg') || alt === 'перемешать') {
-      e.preventDefault();
-      const randomTrack = this.getRandomTrack();
-      if (randomTrack) {
-        void this.loadTrack(randomTrack).then(() => this.play());
-      }
-      return;
-    }
-
-    if (src.includes('fixate.svg') || alt === 'зациклить') {
-      e.preventDefault();
-      this.repeatEnabled = !this.repeatEnabled;
-      this.updateRepeatButtonUI();
-      return;
-    }
-
-    if (src.includes('previous.svg') || alt === 'предыдущий') {
-      e.preventDefault();
-      this.skip(-10);
-      return;
-    }
-
-    if (src.includes('next.svg') || alt === 'следующий') {
-      e.preventDefault();
-      this.skip(10);
-      return;
-    }
-
-    if (src.includes('play.svg') || alt === 'play') {
-      const inFooterPlayer = img.closest('.player__buttons') || img.closest('.player__play-mobile');
-      if (inFooterPlayer) {
-        e.preventDefault();
-        this.togglePlay();
-      }
-    }
-  };
-
-  private attachControls() {
-    if (this.controlsAttached) return;
-
-    const progressTrack = document.querySelector('.player__progress-track') as HTMLElement | null;
-    const volumeBar = document.querySelector('.player__volume-bar') as HTMLElement | null;
-    const heartFooter = document.querySelector('.footer__track-card .footer__title-row img') as HTMLElement | null;
-
-    this.progressFillEl = document.querySelector('.player__progress-fill') as HTMLElement | null;
-    this.volumeFillEl = document.querySelector('.player__volume-fill') as HTMLElement | null;
-    this.volumeThumbEl = document.querySelector('.player__volume-thumb') as HTMLElement | null;
-
-    if (
-      !progressTrack ||
-      !volumeBar ||
-      !heartFooter ||
-      !this.progressFillEl ||
-      !this.volumeFillEl ||
-      !this.volumeThumbEl
-    ) {
-      setTimeout(() => this.attachControls(), 100);
-      return;
-    }
-
-    document.addEventListener('click', this.handleControlClick);
-
-    progressTrack.addEventListener('click', (e) => this.seekFromClick(e as MouseEvent));
-    volumeBar.addEventListener('click', (e) => this.setVolumeFromClick(e as MouseEvent));
-
-    heartFooter.addEventListener('click', () => {
-      const track = this.store.currentTrack;
-      if (track) {
-        void this.store.toggleFavorite(track.id);
-      }
-    });
-
-    window.addEventListener('keydown', (e) => {
-      if (e.key === 'ArrowLeft') this.skip(-10);
-      if (e.key === 'ArrowRight') this.skip(10);
-    });
-
-    this.syncProgressUI();
-    this.syncVolumeUI();
-    this.updateRepeatButtonUI();
-
-    this.controlsAttached = true;
-  }
-
-  private seekFromClick(e: MouseEvent) {
-    if (!this.hasPlayableSource || !isFinite(this.audio.duration) || this.audio.duration <= 0) return;
-
-    const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
-    const percent = (e.clientX - rect.left) / rect.width;
-    const nextTime = percent * this.audio.duration;
-
-    this.audio.currentTime = Math.min(Math.max(nextTime, 0), this.audio.duration);
-    this.syncProgressUI();
-  }
-
-  private setVolumeFromClick(e: MouseEvent) {
-    const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
-    let percent = (e.clientX - rect.left) / rect.width;
-    percent = Math.min(1, Math.max(0, percent));
-
-    this.audio.volume = percent;
-    this.syncVolumeUI(percent);
+    this.dispatchEvent(new CustomEvent('timeupdate', { detail: { currentTime: 0, duration } }));
   }
 
   async loadTrack(track: Track) {
     this.audio.pause();
+
+    if (this.lastTrackBlobUrl) {
+      URL.revokeObjectURL(this.lastTrackBlobUrl);
+      this.lastTrackBlobUrl = null;
+    }
 
     const source = await this.resolveSource(track);
     this.hasPlayableSource = !!source;
@@ -437,6 +282,9 @@ export class AudioPlayer {
     this.store.setCurrentTrack(track);
 
     if (source) {
+      if (source.startsWith('blob:') && source !== this.demoSourceUrl) {
+        this.lastTrackBlobUrl = source;
+      }
       this.audio.src = source;
       this.audio.load();
     } else {
@@ -446,7 +294,8 @@ export class AudioPlayer {
 
     const durationToShow = this.currentSourceDuration || Math.round(track.duration * 60);
     this.store.updatePlayback(false, 0, durationToShow);
-    this.syncProgressUI(0, durationToShow);
+    this.dispatchEvent(new CustomEvent('timeupdate', { detail: { currentTime: 0, duration: durationToShow } }));
+    this.dispatchEvent(new CustomEvent('trackchange', { detail: { track } }));
   }
 
   play() {
@@ -467,10 +316,37 @@ export class AudioPlayer {
   seekTo(time: number) {
     if (!this.hasPlayableSource || !isFinite(this.audio.duration) || this.audio.duration <= 0) return;
     this.audio.currentTime = Math.min(Math.max(time, 0), this.audio.duration);
-    this.syncProgressUI();
+    // timeupdate сработает автоматически
   }
 
   skip(seconds: number) {
     this.seekTo(this.audio.currentTime + seconds);
+  }
+
+  setVolume(volume: number) {
+    const v = Math.min(1, Math.max(0, volume));
+    this.audio.volume = v;
+    this.dispatchEvent(new CustomEvent('volumechange', { detail: { volume: v } }));
+  }
+
+  getVolume(): number {
+    return this.audio.volume;
+  }
+
+  get repeatEnabled(): boolean {
+    return this._repeatEnabled;
+  }
+
+  toggleRepeat() {
+    this._repeatEnabled = !this._repeatEnabled;
+    this.dispatchEvent(new CustomEvent('repeatchange', { detail: { repeatEnabled: this._repeatEnabled } }));
+  }
+
+  async playRandom() {
+    const randomTrack = this.getRandomTrack();
+    if (randomTrack) {
+      await this.loadTrack(randomTrack);
+      this.play();
+    }
   }
 }

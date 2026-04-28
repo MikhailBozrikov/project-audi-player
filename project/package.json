@@ -19,11 +19,20 @@
     "style-loader": "^4.0.0",
     "ts-loader": "^9.5.7",
     "typescript": "^6.0.2",
-    "webpack": "^5.105.4",
+    "webpack": "^5.106.2",
     "webpack-cli": "^7.0.2",
     "webpack-dev-server": "^5.2.3"
   },
   "dependencies": {
     "redom": "^4.3.0"
+  },
+  "overrides": {
+    "webpack-dev-server": {
+      "uuid": "^14.0.0"
+    },
+    "http-proxy-middleware": {
+      "micromatch": "4.0.8",
+      "braces": "3.0.3"
+    }
   }
 }

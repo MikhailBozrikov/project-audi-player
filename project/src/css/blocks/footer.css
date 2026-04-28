@@ -79,24 +79,27 @@
 .player__volume-thumb {
   cursor: pointer;
   transition: transform 0.15s ease, opacity 0.15s ease, filter 0.15s ease;
+  /* user-select: none;*/
 }
 
 .player__buttons img:hover,
 .player__play-mobile img:hover,
 .footer__title-row img:hover,
 .player__volume-thumb:hover {
+  /*transform: scale(1.08);*/
   opacity: 0.9;
-  width: 15px;
-  height: 15px;
+  /*width: 15px;
+  height: 15px;*/
 }
 
 .player__buttons img:active,
 .player__play-mobile img:active,
 .footer__title-row img:active,
 .player__volume-thumb:active {
+  /*transform: scale(0.96);*/
   opacity: 0.8;
-  width: 15px;
-  height: 15px;
+  /*width: 15px;
+  height: 15px;*/
 }
 
 .player__progress-bar {

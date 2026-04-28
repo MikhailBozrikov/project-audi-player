@@ -24,9 +24,25 @@
   display: none;
 }
 
+/*.modal-auth__form.modal-auth__form--login {
+  display: block;
+}*/
+
+/*.modal-auth__form.modal-auth__form--register {
+  display: none;
+}*/
+
 #auth-register:checked ~ .modal-auth__content .modal-auth__form--login {
   display: none;
 }
+
+/*#auth-register:checked ~ .modal-auth__content .modal-auth__form--register {
+  display: block;
+}*/
+
+/*#auth-login:checked ~ .modal-auth__content .modal-auth__form--login {
+  display: block;
+}*/
 
 #auth-login:checked ~ .modal-auth__content .modal-auth__form--register {
   display: none;
@@ -117,6 +133,7 @@
   line-height: 32px;
   color: #000000;
   text-align: center;
+  /*margin: 0 0 40px 0;*/
 }
 
 .modal-auth__form {
@@ -198,6 +215,7 @@
   cursor: pointer;
   transition: background-color 0.2s, transform 0.05s;
   width: 100%;
+  /*margin-top: 10px;*/
 }
 
 .modal-auth__submit:hover {
@@ -248,6 +266,10 @@
 }
 
 @media (max-width: 767px) {
+  /*.modal-auth__content {
+    padding: 40px 24px;
+  }*/
+
   .modal-auth__close-button {
     top: 10px;
     right: 10px;
@@ -260,4 +282,14 @@
     width: 20px;
     height: 20px;
   }
+
+  /*.modal-auth__title {
+   margin-top: 20px;
+    font-size: 20px;
+  }*/
+
+  /*.modal-auth__form {
+    margin-top: 24px;
+    gap: 12px;
+  }*/
 }

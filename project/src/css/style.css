@@ -2,7 +2,7 @@
 @import "global/reboot.css";
 @import "global/fonts.css";
 @import "global/container.css";
-@import "global/app-root.css";   
+@import "global/app-root.css";   /* <-- добавлено */
 @import "global/mobile-cards-fix.css";
 
 /* Блоки */

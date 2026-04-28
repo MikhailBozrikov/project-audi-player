@@ -56,6 +56,7 @@ module.exports = {
     port: 3000,
     hot: true,
     open: true,
+    webSocketServer: 'ws',
     proxy: [
       {
         context: ['/api'],
